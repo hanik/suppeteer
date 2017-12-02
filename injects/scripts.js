@@ -37,22 +37,10 @@ const triggerListener = (e) => {
     e.target.removeEventListener('click', triggerListener)
 }
 
-
-const styleClass = {
-    color: 'yellow',
-    position: 'absolute',
-    top: '0px',
-    left: '0px',
-    background: 'black',
-    borderRadius: '6px',
-    opacity: '0.6',
-    padding: '30px 30px 20px 30px',
-    fontSize: '60px',
-}
 const baundDogGuidance = document.createElement('div')
 baundDogGuidance.id = 'baund-dog-guidance'
-baundDogGuidance.innerText = '시작하려면 여기를 클릭하세요.'
-Object.assign(baundDogGuidance.style, styleClass)
+baundDogGuidance.style.top = '0px'
+baundDogGuidance.style.display = 'none'
 document.getElementsByTagName('body')[0].appendChild(baundDogGuidance)
 baundDogGuidance.addEventListener('click', triggerListener)
 

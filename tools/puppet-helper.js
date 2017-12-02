@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer')
-const collector = require('./element-collector')
 // TODO variables occurred concurrency problem
 let browser
 let recordedCases = []
@@ -25,6 +24,14 @@ async function _typing(page, xpath, text) {
     }
 }
 
+const setGuidance = async function (page, text) {
+    await page.evaluate((commentText) => {
+        let guidance = document.querySelector('#baund-dog-guidance')
+        guidance.innerHTML = commentText
+        guidance.style.display = 'block'
+    }, text)
+}
+
 // TODO split for behavior
 const screenshot = async function (handle, additionalOptions) {
     let options = {}
@@ -46,7 +53,7 @@ const screenshot = async function (handle, additionalOptions) {
 const getPage = async function (url, additionalOptions) {
     // TODO find and apply target page size
     let options = {
-        headless: true,
+        headless: false,
         devtools: false,
         timeout: 30000,
         slowMo: 100,
@@ -85,11 +92,19 @@ const close = async function (page) {
     }
 }
 
+const gethandle = async function(page, xpath) {
+    const resultHandle = await page.evaluateHandle(xpath => {
+        let query = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        return query.singleNodeValue;
+    }, xpath)
+    return resultHandle;
+}
+
 const runAlone = async function (page, xpath, text, comment, action) {
     await page.evaluate((commentText) => {
         document.querySelector('#baund-dog-guidance').innerHTML = commentText
     }, comment)
-    const handle = await collector.gethandle(page, xpath)
+    const handle = await gethandle(page, xpath)
     await page.waitFor(1000)
     // TODO json
     if (action === 'type') {
@@ -154,6 +169,7 @@ const getRecords = function () {
 }
 
 module.exports = {
+    setGuidance,
     screenshot,
     getPage,
     close,
