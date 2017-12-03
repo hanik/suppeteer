@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Huppeteer' }) ;
+  res.render('index', { title: 'Support puppeteer' }) ;
 });
 
 let host = 'http://localhost:10808'

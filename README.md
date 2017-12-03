@@ -1,4 +1,4 @@
-# huppeteer
+# suppeteer
 puppeteer wrapper
 only supported in Node v7.6.0 or greater
 
