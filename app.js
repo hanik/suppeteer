@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var store = require('./tools/store-helper')
 
 var index = require('./routes/index');
 let suppet = require('./routes/suppet');
@@ -22,6 +23,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+const token = 'huppeteer-todo-jwt'
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type')
+  res.header('Access-Control-Allow-Methods', 'POST, GET, OPTION, DELETE')
+  if (req.body.token != token) {
+    res.status(403).send('invalid server')
+    res.end()
+  } else {
+    let data = req.body
+    if (data.id) store.update ('current', 'id', data.id)
+    if (data.auth) store.update ('current', 'auth', data.auth)
+    next()
+  }
+})
 
 app.use('/', index);
 app.use('/suppet', suppet);

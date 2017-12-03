@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const store = require('store')
 // TODO variables occurred concurrency problem
 let browser
 let recordedCases = []
@@ -25,6 +26,12 @@ async function _typing(page, xpath, text) {
 }
 
 const setGuidance = async function (page, text) {
+    await page.addStyleTag({
+        path: 'injects/style.css'
+    })
+    await page.addScriptTag({
+        path: 'injects/guidance.js', 
+    })
     await page.evaluate((commentText) => {
         let guidance = document.querySelector('#baund-dog-guidance')
         guidance.innerHTML = commentText
@@ -50,7 +57,7 @@ const screenshot = async function (handle, additionalOptions) {
     }
 }
 
-const getPage = async function (url, additionalOptions) {
+const getPage = async function (url, additionalOptions, auth) {
     // TODO find and apply target page size
     let options = {
         headless: false,
@@ -62,7 +69,9 @@ const getPage = async function (url, additionalOptions) {
     options = Object.assign(options, additionalOptions)
     browser = await puppeteer.launch(options)
     const page = await browser.newPage()
-    await _handleAuth(page)
+    if(auth) {
+        await _handleAuth(page)
+    }
 
     const viewport = {
         width: 1280,
