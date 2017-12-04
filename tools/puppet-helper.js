@@ -125,7 +125,7 @@ const runAlone = async function (page, xpath, text, comment, action) {
 }
 
 const runStep = async function (body, page) {
-    const step = body.scenarioData
+    const step = body
     const contents = Object.values(step.context)
     const commandIntent = step.intent
     let actionDescription
